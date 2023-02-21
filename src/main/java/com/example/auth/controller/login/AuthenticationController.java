@@ -1,4 +1,4 @@
-package com.example.auth.controller;
+package com.example.auth.controller.login;
 
 
 import com.example.auth.dto.AuthenticationRequest;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <auth_controller>
+ * <login_auth_controller>
  */
 @RequestMapping(value = "/auth")
 @RestController
@@ -24,14 +24,15 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
-
     @PostMapping(value = "/register")
-    public ResponseEntity<AuthenticationResponse>  register(@RequestBody RegisterRequest request){
+    public ResponseEntity<Object>  register(@RequestBody RegisterRequest request){
         return ResponseEntity.ok(authenticationService.register(request));
     }
 
-    @PostMapping(value = "/authentication")
-    public ResponseEntity<AuthenticationResponse> authentication(@RequestBody AuthenticationRequest request){
+    @PostMapping(value = "/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
+
+
 }

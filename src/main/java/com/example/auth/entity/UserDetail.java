@@ -33,7 +33,7 @@ public class UserDetail implements UserDetails {
     private Role role;
 
 
-    //認證成功Get所有Authority
+    //USER許可權
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

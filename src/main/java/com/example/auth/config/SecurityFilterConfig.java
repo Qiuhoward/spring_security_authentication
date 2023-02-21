@@ -13,7 +13,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * <security_filter_chain_config>
  */
 @Configuration
-@EnableWebSecurity //用來啟用Spring Security所需的各項配置。
+@EnableWebSecurity //enable security config
 public class SecurityFilterConfig  {
     private final AuthenticationConfig authenticationConfig;
     private final JwtAuthenticationFilter filter;
@@ -23,22 +23,21 @@ public class SecurityFilterConfig  {
         this.filter = filter;
     }
 
-    /**
-     *<過濾條件相關配置>
-     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/auth/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
+                .authorizeHttpRequests((request)->
+                        request.requestMatchers("/auth/**")
+                                .permitAll()
+                                .requestMatchers("/swagger-ui/index.html#/**")
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated())
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationConfig.authenticationProvider())
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+                .formLogin()
                 ;
 
         return http.build();
