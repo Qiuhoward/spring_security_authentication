@@ -1,6 +1,6 @@
-package com.example.authentication.config;
+package com.example.auth.config;
 
-import com.example.authentication.filter.JwtAuthenticationFilter;
+import com.example.auth.filter.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,7 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
- * <過濾器管理鍊配置>
+ * <security_filter_chain_config>
  */
 @Configuration
 @EnableWebSecurity //用來啟用Spring Security所需的各項配置。
@@ -28,19 +28,18 @@ public class SecurityFilterConfig  {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf()
-                .disable()
+        http.csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationConfig.authenticationProvider())
-                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+                ;
 
         return http.build();
     }

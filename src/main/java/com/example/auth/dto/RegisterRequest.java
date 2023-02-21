@@ -1,10 +1,10 @@
-package com.example.authentication.dto;
+package com.example.auth.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * <註冊請求參數>
+ * <register_request>
  */
 @Getter
 @Setter

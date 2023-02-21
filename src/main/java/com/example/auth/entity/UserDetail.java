@@ -1,4 +1,4 @@
-package com.example.authentication.entity;
+package com.example.auth.entity;
 
 
 import jakarta.persistence.*;
@@ -21,7 +21,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Entity
-public class User implements UserDetails {
+public class UserDetail implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -68,7 +68,7 @@ public class User implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        User user = (User) o;
+        UserDetail user = (UserDetail) o;
         return id != null && Objects.equals(id, user.id);
     }
 

@@ -1,4 +1,4 @@
-package com.example.authentication.service;
+package com.example.auth.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     private static final int expiredTime=1000*1000;
-    private static final String key="645367566B59703373367639792442264528482B4D6251655468576D5A713474";//現在是網路抓的加密鑰匙(下面getKey進行解密)
+    private static final String key="645367566B59703373367639792442264528482B4D6251655468576D5A713474";//網路抓的加密鑰匙(下面getKey進行解密)
     public String generateToken(UserDetails userDetails){
         Map<String,Objects>claims=new HashMap<>();
         return Jwts.builder()
@@ -23,7 +23,7 @@ public class JwtService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+expiredTime))
                 .setSubject(userDetails.getUsername())
-                .signWith(getKey(),SignatureAlgorithm.HS256)
+                .signWith(getKey(),SignatureAlgorithm.HS256)//簽名產生jwt
                 .compact();
     }
 
@@ -46,7 +46,7 @@ public class JwtService {
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)//JWS而非JWT
                 .getBody();
     }
 

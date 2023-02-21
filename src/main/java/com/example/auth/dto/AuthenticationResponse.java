@@ -1,11 +1,11 @@
-package com.example.authentication.dto;
+package com.example.auth.dto;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * <認證回應參數>
+ * <auth_response>
  */
 @Getter
 @Setter

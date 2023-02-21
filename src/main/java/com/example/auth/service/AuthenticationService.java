@@ -1,11 +1,11 @@
-package com.example.authentication.service;
+package com.example.auth.service;
 
-import com.example.authentication.dto.AuthenticationRequest;
-import com.example.authentication.dto.AuthenticationResponse;
-import com.example.authentication.dto.RegisterRequest;
-import com.example.authentication.entity.Role;
-import com.example.authentication.entity.User;
-import com.example.authentication.entity.UserRepository;
+import com.example.auth.dto.AuthenticationRequest;
+import com.example.auth.dto.AuthenticationResponse;
+import com.example.auth.dto.RegisterRequest;
+import com.example.auth.entity.Role;
+import com.example.auth.entity.UserDetail;
+import com.example.auth.entity.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,14 +29,14 @@ public class AuthenticationService {
         if(!Objects.equals(request.getPassword1(), request.getPassword2())){
             return null;
         }
-       var user=User.builder()
+       var user= UserDetail.builder()
                .firstname(request.getFirstName())
                .lastname(request.getLastName())
                .role(Role.USER)
                .email(request.getEmail())
                .password(passwordEncoder.encode(request.getPassword1()))
                .build();
-
+        System.out.println(user);
         userRepository.save(user);
 
         var jsonToken=jwtService.generateToken(user); //傳入參數
@@ -50,10 +50,11 @@ public class AuthenticationService {
      */
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var user=userRepository.findByEmail(request.getEmail()).orElseThrow();
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword()));
-        //UsernamePasswordAuthenticationToken用來代表username及password，其實作了Authentication。
-
-        var jwtToken=jwtService.generateToken(user); //val為final var非final
+        //做帳號密碼認證
+        System.out.println(user);
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                request.getEmail(),request.getPassword()));
+        var jwtToken=jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();

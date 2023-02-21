@@ -1,10 +1,10 @@
-package com.example.authentication.controller;
+package com.example.auth.controller;
 
 
-import com.example.authentication.dto.AuthenticationRequest;
-import com.example.authentication.dto.AuthenticationResponse;
-import com.example.authentication.dto.RegisterRequest;
-import com.example.authentication.service.AuthenticationService;
+import com.example.auth.dto.AuthenticationRequest;
+import com.example.auth.dto.AuthenticationResponse;
+import com.example.auth.dto.RegisterRequest;
+import com.example.auth.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <認證接口>
+ * <auth_controller>
  */
 @RequestMapping(value = "/auth")
 @RestController

@@ -1,7 +1,7 @@
-package com.example.authentication.filter;
+package com.example.auth.filter;
 
 
-import com.example.authentication.service.JwtService;
+import com.example.auth.service.JwtService;
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,7 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 /**
- * <過濾請求>
+ * <jwt_filter>
  */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -32,17 +32,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        final String authHeader=request.getHeader("Authentication");
+        final String authHeader=request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
-       if(authHeader==null || !authHeader.startsWith("bearer ")){
+        System.out.println("header:"+authHeader);
+       if(authHeader==null || !authHeader.startsWith("Bearer ")){
            filterChain.doFilter(request,response);
            return ;
         }
        jwt=authHeader.substring(7);
+        System.out.println("jwt:"+jwt);
        userEmail=jwtService.extraUserEmail(jwt);
-
-        //有帳號 然後 沒有認證過
+        System.out.println("userEmail:"+userEmail);
         if(userEmail!=null|| SecurityContextHolder.getContext().getAuthentication()==null){
             UserDetails userDetails=this.userDetailsService.loadUserByUsername(userEmail);
             if(jwtService.isTokenValid(jwt,userDetails)) {
@@ -51,7 +52,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
-
         }
         filterChain.doFilter(request,response);
     }
