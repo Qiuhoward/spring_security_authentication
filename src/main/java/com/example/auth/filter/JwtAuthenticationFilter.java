@@ -1,6 +1,5 @@
 package com.example.auth.filter;
 
-
 import com.example.auth.service.JwtService;
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
@@ -17,7 +16,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 /**
+ * @Author howard
  * <jwt_filter>
+ *<exception auth API ,the other API need to take current bearer token>
  */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -32,6 +33,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
+
+
+
+
         final String authHeader=request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
@@ -40,12 +45,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
            filterChain.doFilter(request,response);
            return ;
         }
+
        jwt=authHeader.substring(7);
         System.out.println("jwt:"+jwt);
        userEmail=jwtService.extraUserEmail(jwt);
         System.out.println("userEmail:"+userEmail);
+
+        //account is exist but not to authentication
         if(userEmail!=null|| SecurityContextHolder.getContext().getAuthentication()==null){
             UserDetails userDetails=this.userDetailsService.loadUserByUsername(userEmail);
+
+            //check token
             if(jwtService.isTokenValid(jwt,userDetails)) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken
                 (userDetails, null, userDetails.getAuthorities());

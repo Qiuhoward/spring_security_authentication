@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 /**
  * <security_filter_chain_config>
+ * <manger_filter>
  */
 @Configuration
 @EnableWebSecurity //enable security config
@@ -37,7 +38,7 @@ public class SecurityFilterConfig  {
                 .and()
                 .authenticationProvider(authenticationConfig.authenticationProvider())
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin()
+                //.cors().disable
                 ;
 
         return http.build();

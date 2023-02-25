@@ -1,5 +1,5 @@
 package com.example.auth.config;
-import com.example.auth.entity.UserRepository;
+import com.example.auth.entity.user.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,11 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class AuthenticationConfig {
 
     private final UserRepository userRepository;
-
     public AuthenticationConfig(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
 
     //java8 optional && lambda
     @Bean
@@ -30,7 +28,6 @@ public class AuthenticationConfig {
         return (username) -> userRepository.findByEmail(username)
                 .orElseThrow(()->new UsernameNotFoundException("userName not found"));
     }
-
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider provider=new DaoAuthenticationProvider();
@@ -38,7 +35,6 @@ public class AuthenticationConfig {
         provider.setUserDetailsService(userDetailsService());
         return provider;
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

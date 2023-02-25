@@ -11,9 +11,13 @@ import java.security.Key;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * <jwt_service>
+ * <some_function_programming_style>
+ */
 @Service
 public class JwtService {
-    private static final int expiredTime=1000*1000;
+    private static final int expiredTime=600*1000;//10 min expired
     private static final String key="645367566B59703373367639792442264528482B4D6251655468576D5A713474";//網路抓的加密鑰匙(下面getKey進行解密)
     public String generateToken(UserDetails userDetails){
         Map<String,Objects>claims=new HashMap<>();
@@ -23,20 +27,20 @@ public class JwtService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+expiredTime))
                 .setSubject(userDetails.getUsername())
-                .signWith(getKey(),SignatureAlgorithm.HS256)//簽名產生jwt
+                .signWith(getKey(),SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String extraUserEmail(String token) {
-        return extraClaim(token,Claims::getSubject);//其實get這些東西 這些參數都是claims類的所以傳下去function<為claims類,回傳則不一定>
+        return extraClaim(token,Claims::getSubject);
     }
 
     /**
      * 解析指定claim
      */
-    public <T> T extraClaim(String token, Function<Claims,T>claimsTFunction){ //java8 的function T為function回傳值 Claims為引數
+    public <T> T extraClaim(String token, Function<Claims,T>claimsTFunction){ //java8 的function api(左為參數，又為回傳)
         final Claims claims=extraAllClaim(token);//先解析所有claims 下一步套用function就可以了
-        return claimsTFunction.apply(claims);//引數為CLAIMS所以回傳就是CLAIMS
+        return claimsTFunction.apply(claims);//引數為claims所以回傳就是claims
     }
 
     /**
@@ -46,7 +50,7 @@ public class JwtService {
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
                 .build()
-                .parseClaimsJws(token)//JWS而非JWT
+                .parseClaimsJws(token)
                 .getBody();
     }
 
@@ -62,7 +66,6 @@ public class JwtService {
         final String userName=extraUserEmail(token);
         return userName.equals(userDetails.getUsername())&& !isTokenExpired(token);
     }
-
 
     /**
      * 獲取私鑰

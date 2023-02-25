@@ -1,6 +1,7 @@
-package com.example.auth.entity;
+package com.example.auth.entity.user;
 
 
+import com.example.auth.entity.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
